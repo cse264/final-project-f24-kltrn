@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const cors = require('cors');
 
 // Getting schema from schema file
 const { User, Session } = require('./db_schema/Schema.js');
@@ -9,6 +10,12 @@ const { User, Session } = require('./db_schema/Schema.js');
 // App and port constants
 const app = express();
 const PORT = process.env.PORT || 8000;
+
+// Enable cors
+app.use(cors({
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'PUT', 'POST', 'DELETE'],
+}));
 
 // For parsing json
 app.use(express.json());
