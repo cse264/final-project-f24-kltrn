@@ -3,6 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
+const { OAuth2Client } = require('google-auth-library');
+const cookieParser = require('cookie-parser');
 
 // Getting schema from schema file
 const { User, Session } = require('./db_schema/Schema.js');
@@ -17,8 +19,46 @@ app.use(cors({
   methods: ['GET', 'PUT', 'POST', 'DELETE'],
 }));
 
+app.use(cookieParser());
+
 // For parsing json
 app.use(express.json());
+
+// For connecting to google api
+const oAuth2Client = new OAuth2Client(
+  process.env.CLIENT_ID,
+  process.env.CLIENT_SECRET,
+  'http://localhost:8000/auth/google/callback'
+);
+
+// Define scopes
+const SCOPES = ['https://www.googleapis.com/auth/calendar.events', 'https://www.googleapis.com/auth/calendar'];
+
+// Starts google auth
+app.get('/auth/google', (req, res) => {
+  const authorizeUrl = oAuth2Client.generateAuthUrl({
+    access_type: 'offline',
+    scope: SCOPES,
+  });
+  res.redirect(authorizeUrl);
+});
+
+// Handle the OAuth2 callback
+app.get('/auth/google/callback', async (req, res) => {
+  const code = req.query.code;
+  try {
+    const { tokens } = await oAuth2Client.getToken(code);
+    oAuth2Client.setCredentials(tokens);
+
+    // Save token in a cookie so future requests don't need to log in again
+    res.cookie('google_access_token', tokens.access_token, { httpOnly: true });
+
+    res.redirect('http://localhost:3000/home');
+  } catch (error) {
+    console.error('Error during OAuth2 callback:', error);
+    res.status(500).send('Authentication failed');
+  }
+});
 
 // This connects to the database using .env MONGO_URI constant
 mongoose.connect(process.env.MONGO_URI)

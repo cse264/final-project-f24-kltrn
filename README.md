@@ -5,9 +5,17 @@
 
 
 ### Running the project
-Make sure you are in the final-project-f24-kltrn folder.
+First you must create an .env file in your repository with the environmental variables MONGO_URI, CLIENT_ID, and CLIENT_SECRET. To get the MONGO_URI, accept my invitation to the MonogDB '264FinalProject' cluster. When signed in, select the Cluster, click 'Connect', then select 'Drivers' -> 'Node.js 6.7 or later'. There should be a connection string that looks something like:
 
-Run `npm install` and then `npm run dev`.
+mongodb+srv://tas325:<db_password>@264finalproject.jpwxa.mongodb.net/?retryWrites=true&w=majority&appName=264FinalProject
+
+In this example tas325 is my username but you should change it to yours and replace <db_password> with whatever password you chose. Also make sure to go to the 'Network Access' tab and add your current IP address (MongoDB should have a button that automically does this if it sees your current IP address isn't in the database). 
+
+For CLIENT_ID and CLIENT_SECRET go to the Google Cloud Console. Everyone should have been added to the '264FinalProject' project as an owner. Go to 'APIs and Services' -> 'Credentials' -> 'Web Client 1'. You can find the client id and secret on that page.
+
+Once you add those three environmental variables you should be able to run the project. 
+
+Make sure you are in the final-project-f24-kltrn folder. Run `npm install` and then `npm run dev`.
 
 
 ### Build a web app in a team of 4-5
