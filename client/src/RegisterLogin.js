@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from './UserContext';
 
 const RegisterLogin = () => {
   const [isRegistering, setIsRegistering] = useState(true);
@@ -6,8 +8,11 @@ const RegisterLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const { setUserEmail } = useContext(UserContext);
+  const nav = useNavigate();
 
   const handleRegister = async (e) => {
+    e.preventDefault();
     try {
       const response = await fetch('http://localhost:8000/register', {
         method: 'POST',
@@ -21,9 +26,8 @@ const RegisterLogin = () => {
       const data = await response.json();
       if (response.ok) {
         setMessage(data.message);
-        setName('');
-        setEmail('');
-        setPassword('');
+        setUserEmail(email);
+        nav('/home');
       } else {
         setMessage(data.message || 'Registration error');
       }
@@ -33,6 +37,7 @@ const RegisterLogin = () => {
   };
 
   const handleLogin = async (e) => {
+    e.preventDefault();
     try {
       const response = await fetch('http://localhost:8000/login', {
         method: 'POST',
@@ -46,8 +51,8 @@ const RegisterLogin = () => {
       const data = await response.json();
       if (response.ok) {
         setMessage(data.message);
-        setEmail('');
-        setPassword('');
+        setUserEmail(email);
+        nav('/home');
       } else {
         setMessage(data.message || 'Login error');
       }
