@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const cors = require('cors');
 const { OAuth2Client } = require('google-auth-library');
 const cookieParser = require('cookie-parser');
+const { google } = require('googleapis');
 
 // Getting schema from schema file
 const { User, Session } = require('./db_schema/Schema.js');
@@ -107,6 +108,37 @@ app.post('/login', async (req, res) => {
     console.error('Error logging in user', err);
     res.status(400);
   }
+});
+
+// Gets list of events from the user's google calendar
+// Returns up to 50 future events, ordered by start time
+app.get('/google-events', async (req, res) => {
+  const accessToken = req.cookies.google_access_token;
+
+  if (!accessToken) {
+    return res.status(401).json({ message: 'User not signed in/authenticated. '});
+  }
+
+  try {
+    const oAuth2Client = new OAuth2Client(process.env.CLIENT_ID, process.env.CLIENT_SECRET);
+    oAuth2Client.setCredentials({ access_token: accessToken });
+
+    const calendar = google.calendar({ version: 'v3', auth: oAuth2Client });
+
+    const { data } = await calendar.events.list({
+      calendarId: 'primary',
+      timeMin: new Date().toISOString(), // include events starting from today
+      maxResults: 50,
+      singleEvents: true,
+      orderBy: 'startTime',
+    });
+
+    res.status(200).json(data.items);
+  } catch (err) {
+    console.error('Error getting events from users google calendar: ', err);
+    res.status(400);
+  }
+
 });
 
 
