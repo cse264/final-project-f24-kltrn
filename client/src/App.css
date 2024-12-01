@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -35,4 +35,41 @@
   to {
     transform: rotate(360deg);
   }
+} */
+nav h2 {
+  font-family: "Comfortaa", sans-serif;
+  font-size: 10px;
+  padding-right: 15px;
+}
+
+.nav-link{
+  text-decoration: none;
+  color:#fff;
+  display: flex;
+  font-size: 20px;
+}
+
+.banner {
+  display: flex;
+  align-items: center;
+  background-color: #5e2979;
+  color: #fff;
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+}
+
+.banner h1 {
+  font-family: "Comfortaa", sans-serif;
+  font-size: 50px;
+  padding-left: 30px;
+  margin-right: auto;
+  font-weight: normal;
+}
+
+.banner nav {
+  display: flex;
+  gap: 30px;
+  align-items: center;
 }

@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from './UserContext';
+import './RegisterLogin.css';
 
 const RegisterLogin = () => {
   const [isRegistering, setIsRegistering] = useState(true);
@@ -64,10 +65,10 @@ const RegisterLogin = () => {
   // If user selects register, register screen displays
   // If user selects login, login screen displays
   return (
-    <div>
-      <div>
-        <button onClick={() => setIsRegistering(true)}>Register</button>
-        <button onClick={() => setIsRegistering(false)}>Login</button>
+    <div className="register-login-container">
+      <div className="buttons">
+        <button onClick={() => setIsRegistering(true)} className="register">Register</button>
+        <button onClick={() => setIsRegistering(false)} className="login">Login</button>
       </div>
       <div>
         {isRegistering ? (
