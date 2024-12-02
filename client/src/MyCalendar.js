@@ -1,21 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import { useAuth } from './Authentication';
 import './App.css';
 import pic from './calendar.png';
 
 // Google Calendar Integration
 function MyCalendar() {
   const [events, setEvents] = useState([]);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
+  const { isLoggedIn, setIsLoggedIn, login, token } = useAuth(); // Use context values
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [userEmail, setUserEmail] = useState(null); 
+
   //store the tokenClient
   const tokenClientRef = useRef(null);
 
   const CLIENT_ID = '835824290802-l35n15ukorvso0q9ie4bk342lcb4t8j6.apps.googleusercontent.com';
   const API_KEY = 'AIzaSyDMZl4zNDY457YuPlsguti7hiJpTXo-d4Q';
   const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
-  const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly';
+  const SCOPES = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email';
 
   //initialize the Google API client
   const initializeGapiClient = async () => {
@@ -38,7 +41,14 @@ function MyCalendar() {
     if (resp.error) {
       throw resp;
     }
-    setIsLoggedIn(true);
+    // setIsLoggedIn(true);
+    // const userInfoResponse = await window.gapi.client.request({
+    //   path: 'https://www.googleapis.com/oauth2/v3/userinfo',
+    // });
+
+    // setUserEmail(userInfoResponse.result.email);
+    const newToken = window.gapi.client.getToken().access_token;
+    login(newToken); 
     await listUpcomingEvents();
   };
 
@@ -129,6 +139,7 @@ function MyCalendar() {
 
       {isLoggedIn && (
         <div className="calendar-container">
+          {/* <p>Email: {userEmail}</p>  */}
           <FullCalendar
             plugins={[dayGridPlugin]}
             initialView="dayGridMonth"
