@@ -7,6 +7,7 @@ const Calendar = () => {
   return (
     <div>
       <h2>This is your calendar</h2>
+      <p>User: {userEmail}</p>
     </div>
   );
 };

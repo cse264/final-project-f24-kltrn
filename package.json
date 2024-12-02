@@ -23,6 +23,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "gapi-script": "^1.2.0",
     "google-auth-library": "^9.15.0",
     "googleapis": "^144.0.0",
     "mongodb": "^6.11.0",
