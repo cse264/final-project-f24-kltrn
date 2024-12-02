@@ -73,3 +73,43 @@ nav h2 {
   gap: 30px;
   align-items: center;
 }
+
+.image {
+  max-width: 45%;
+  margin-top: 20px;
+}
+
+#login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  text-align: center;
+}
+
+#authorize_button {
+  justify-content: center;
+  background-color:#d2a7f1ec;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+#authorize_button:hover {
+  background-color: #d2a7f1ec;
+  transform: scale(1.05);
+}
+
+#authorize_button:active {
+  transform: scale(1);
+}
+
+#authorize_button:focus {
+  outline: none; 
+}
+

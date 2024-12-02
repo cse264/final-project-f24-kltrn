@@ -2,7 +2,6 @@ import React from 'react';
 import RegisterLogin from './RegisterLogin';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { UserProvider } from './UserContext';
-import Home from './Home';
 import MyCalendar from './MyCalendar';
 import CreateEvent from './CreateEvent';
 import Invitations from './Invitations';
@@ -26,8 +25,7 @@ function App () {
           </header>
 
           <Routes>
-            <Route path="/" element={<RegisterLogin />} /> 
-            <Route path="/home" element={<Home />} />   
+            <Route path="/" element={<MyCalendar />} /> 
             <Route path="/calendar" element={<MyCalendar />} />
             <Route path="/create" element={<CreateEvent />} />
             <Route path="/myevents" element={<MyEvents />} />

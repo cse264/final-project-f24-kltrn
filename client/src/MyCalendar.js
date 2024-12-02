@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import './App.css';
+import pic from './calendar.png';
 
 // Google Calendar Integration
 function MyCalendar() {
@@ -114,13 +116,18 @@ function MyCalendar() {
 
   return (
     <div>
-      <h2>My Calendar</h2>
-
+      <div id="login-container">
       {!isLoggedIn && (
-        <button id="authorize_button" onClick={handleAuthClick}>
-          Authorize
-        </button>
+        <div>
+          <img src={pic} alt="calendar" className="image"></img>
+          <h2>Log in to PlanPal!</h2>
+          <button id="authorize_button" onClick={handleAuthClick}>
+            Log In with Google
+          </button>
+        </div>
       )}
+      </div>
+
       
       {/* Show the FullCalendar only after user is logged in */}
       {isLoggedIn && (
