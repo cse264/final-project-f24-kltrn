@@ -17,7 +17,8 @@ const PORT = process.env.PORT || 8000;
 // Enable cors
 app.use(cors({
   origin: 'http://localhost:3000',
-  methods: ['GET', 'PUT', 'POST', 'DELETE'],
+  methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+  credentials: true,
 }));
 
 app.use(cookieParser());
@@ -70,47 +71,49 @@ mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log('MongoDB connected'))
 .catch((err) => console.error('MongoDB connection error:', err));
 
-// Registering a new user
-app.post('/register', async (req, res) => {
-  const name = req.body.name;
-  const email = req.body.email;
-  const password = req.body.password;
 
-  if (!name || !email || !password) {
-    return res.status(400).json({ message: 'Missing name, email, or password'});
+// Login user via google
+app.post('/google-login', async (req, res) => {
+  const { name, email, role } = req.body;
+
+  if (!name || !email || !role) {
+    return res.status(400).json({ message: 'Missing name, email or role'});
   }
 
   try {
-    const hashPass = await bcrypt.hash(password, 10);
-    const user = await User.create({ name, email, password: hashPass });
-    res.status(201).json({ message: `User registered: ${email}`});
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = await User.create({ name, email, role });
+      console.log('User added to database: ', email);
+    }
+
+    res.status(200).json({ message: 'Google login via backend complete' });
   } catch (err) {
-    console.error('Error registering user', err);
+    console.error('Error logging in user', err);
     res.status(400);
   }
 });
 
-// Login existing user
-app.post('/login', async (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
+// Check if user exists
+app.post('/user-exists', async (req, res) => {
+  const { email } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ message: 'Missing email or password'});
+  if (!email) {
+    return res.status(400).json({ message: 'Email is missing' });
   }
 
   try {
     const user = await User.findOne({ email });
 
-    const passCheck = await bcrypt.compare(password, user.password);
-    if (!passCheck) {
-      return res.status(400).json({ message: 'Invalid login'});
+    if (!user) {
+      return res.status(200).json({ exists: false });
     }
 
-    res.status(200).json({ message: 'Login complete' });
+    res.status(200).json({ exists: true });
   } catch (err) {
-    console.error('Error logging in user', err);
-    res.status(400);
+    console.error('Error checking if user exists:', err);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 

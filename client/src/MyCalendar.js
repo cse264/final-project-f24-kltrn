@@ -9,6 +9,8 @@ import pic from './calendar.png';
 function MyCalendar() {
   const [events, setEvents] = useState([]);
   const { isLoggedIn, setIsLoggedIn, login, token } = useAuth(); // Use context values
+  const [ userGoogleInfo, setUserGoogleInfo] = useState(null);
+  const [ showRoles, setShowRoles ] = useState(false);
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
   // const [userEmail, setUserEmail] = useState(null); 
 
@@ -18,7 +20,7 @@ function MyCalendar() {
   const CLIENT_ID = '835824290802-l35n15ukorvso0q9ie4bk342lcb4t8j6.apps.googleusercontent.com';
   const API_KEY = 'AIzaSyDMZl4zNDY457YuPlsguti7hiJpTXo-d4Q';
   const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
-  const SCOPES = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email';
+  const SCOPES = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
 
   //initialize the Google API client
   const initializeGapiClient = async () => {
@@ -41,16 +43,60 @@ function MyCalendar() {
     if (resp.error) {
       throw resp;
     }
-    // setIsLoggedIn(true);
-    // const userInfoResponse = await window.gapi.client.request({
-    //   path: 'https://www.googleapis.com/oauth2/v3/userinfo',
-    // });
 
-    // setUserEmail(userInfoResponse.result.email);
-    const newToken = window.gapi.client.getToken().access_token;
-    login(newToken); 
-    await listUpcomingEvents();
+    try {
+      const newToken = window.gapi.client.getToken().access_token;
+      login(newToken); 
+
+      const userInfoResponse = await window.gapi.client.request({
+        path: 'https://www.googleapis.com/oauth2/v3/userinfo',
+      });
+
+      const { name, email } = userInfoResponse.result;
+      setUserGoogleInfo({ name, email });
+
+      const response = await fetch('http://localhost:8000/user-exists', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+        credentials: 'include',
+      });
+
+      const data = await response.json();
+
+      if (!data.exists) {
+        setShowRoles(true);
+      }
+      else {
+        setShowRoles(false);
+        setIsLoggedIn(true);
+        await listUpcomingEvents();
+      }
+    } catch (error) {
+      console.error('Error during sign-in:', error);
+    }
   };
+
+  const handleRoleSubmit = async (role) => {
+    if (!role || !userGoogleInfo) {
+      return;
+    }
+
+    try {
+      await fetch('http://localhost:8000/google-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...userGoogleInfo, role }),
+        credentials: 'include',
+      });
+
+      setShowRoles(false);
+      setIsLoggedIn(true);
+      await listUpcomingEvents();
+    } catch (error) {
+      console.error('Error submitting role:', error);
+    }
+  }
 
   //show upcoming events after authentication
   const listUpcomingEvents = async () => {
@@ -137,7 +183,18 @@ function MyCalendar() {
       )}
       </div>
 
-      {isLoggedIn && (
+      {isLoggedIn && showRoles && (
+        <div className="role-select-container">
+          <div className="role-select-box">
+            <h3>Welcome {userGoogleInfo.name}!</h3>
+            <h3>Please select your role: </h3>
+            <button onClick={() => handleRoleSubmit('Event Organizer')}>Event Organizer</button>
+            <button onClick={() => handleRoleSubmit('Invitee')}>Invitee</button>
+          </div>
+        </div>
+      )}
+
+      {isLoggedIn && !showRoles && (
         <div className="calendar-container">
           {/* <p>Email: {userEmail}</p>  */}
           <FullCalendar
