@@ -9,7 +9,7 @@ function MyCalendar() {
   const [events, setEvents] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   
-  // Ref to store the tokenClient
+  //store the tokenClient
   const tokenClientRef = useRef(null);
 
   const CLIENT_ID = '835824290802-l35n15ukorvso0q9ie4bk342lcb4t8j6.apps.googleusercontent.com';
@@ -17,7 +17,7 @@ function MyCalendar() {
   const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
   const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly';
 
-  // Function to initialize the Google API client
+  //initialize the Google API client
   const initializeGapiClient = async () => {
     await window.gapi.client.init({
       apiKey: API_KEY,
@@ -26,14 +26,14 @@ function MyCalendar() {
     maybeEnableButtons();
   };
 
-  // Enable the authorize button when both APIs are loaded
+  //Enable the authorize button when both APIs are loaded
   const maybeEnableButtons = () => {
     if (window.gapi.client && tokenClientRef.current) {
       document.getElementById('authorize_button').style.visibility = 'visible';
     }
   };
 
-  // Handle the authentication callback
+  //authentication callback
   const handleAuthCallback = async (resp) => {
     if (resp.error) {
       throw resp;
@@ -42,7 +42,7 @@ function MyCalendar() {
     await listUpcomingEvents();
   };
 
-  // List upcoming events after authentication
+  //show upcoming events after authentication
   const listUpcomingEvents = async () => {
     try {
       const response = await window.gapi.client.calendar.events.list({
@@ -65,7 +65,7 @@ function MyCalendar() {
     }
   };
 
-  // Google OAuth2 Authentication functions
+  //Google OAuth2 Authentication functions
   const handleAuthClick = async () => {
     if (!window.gapi.client.getToken()) {
       tokenClientRef.current.requestAccessToken({ prompt: 'consent' });
@@ -79,11 +79,11 @@ function MyCalendar() {
     if (token) {
       window.google.accounts.oauth2.revoke(token.access_token);
       window.gapi.client.setToken('');
-      setIsLoggedIn(false); // Update login status when user signs out
+      setIsLoggedIn(false); //update login status when user signs out
     }
   };
 
-  // Load the Google APIs and Identity Services
+  //load the Google APIs
   useEffect(() => {
     const gapiLoaded = () => {
       window.gapi.load('client', initializeGapiClient);
@@ -98,7 +98,6 @@ function MyCalendar() {
       maybeEnableButtons();
     };
 
-    // Load Google API and Google Identity Services
     const loadScripts = () => {
       const gapiScript = document.createElement('script');
       gapiScript.src = 'https://apis.google.com/js/api.js';
@@ -112,11 +111,11 @@ function MyCalendar() {
     };
 
     loadScripts();
-  }, []); // Empty dependency array, runs only once when component mounts
+  }, []); 
 
   return (
     <div>
-      <div id="login-container">
+      <div className="login-container">
       {!isLoggedIn && (
         <div>
           <img src={pic} alt="calendar" className="image"></img>
@@ -128,10 +127,8 @@ function MyCalendar() {
       )}
       </div>
 
-      
-      {/* Show the FullCalendar only after user is logged in */}
       {isLoggedIn && (
-        <div>
+        <div className="calendar-container">
           <FullCalendar
             plugins={[dayGridPlugin]}
             initialView="dayGridMonth"

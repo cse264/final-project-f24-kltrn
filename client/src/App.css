@@ -79,7 +79,19 @@ nav h2 {
   margin-top: 20px;
 }
 
-#login-container {
+.calendar-container {
+  margin: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  max-width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+.login-container {
   display: flex;
   justify-content: center;
   align-items: center;

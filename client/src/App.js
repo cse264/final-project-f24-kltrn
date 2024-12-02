@@ -1,5 +1,4 @@
 import React from 'react';
-import RegisterLogin from './RegisterLogin';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { UserProvider } from './UserContext';
 import MyCalendar from './MyCalendar';

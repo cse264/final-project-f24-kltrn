@@ -10,6 +10,15 @@ body {
   height: 100vh;
 }
 
+:root {
+  --fc-border-color: rgb(177, 173, 173);
+  --fc-daygrid-event-dot-width: 10px;
+}
+
+.fc-toolbar-title{
+  font-family: "Comfortaa", sans-serif;
+  color: #2c2c2c;
+}
 
 #root { 
   /* display: flex; */
