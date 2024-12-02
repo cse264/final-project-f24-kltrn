@@ -2,17 +2,29 @@ const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
+    role: { type: String, required: true},
     email: { type: String, required: true, unique: true},
     password: { type: String, required: true},
 });
 
-const sessionSchema = new mongoose.Schema({
-    sessionID: { type: String, required: true },
-    userID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
-    createdAt: { type: Date, default: Date.now, expires: 3600 },
+const eventSchema = new mongoose.Schema({
+    title: { type: String, required: true },
+    description: { type: String },
+    startTime: { type: Date, required: true},
+    endTime: { type: Date, required: true},
+    location: { type: String },
+    userId: { type: mongoose.Schema.Types.ObjectId, required: true },
+    invitees: [{ type: mongoose.Schema.Types.ObjectId }],
 });
 
-const User = mongoose.model('User', userSchema);
-const Session = mongoose.model('Session', sessionSchema);
+const invitationSchema = new mongoose.Schema({
+    organizerEmail: { type: String, required: true },
+    inviteeEmail: { type: String, required: true },
+    status: { type: String, required: true},
+})
 
-module.exports = { User, Session };
+const User = mongoose.model('User', userSchema);
+const Event = mongoose.model('Event', eventSchema);
+const Invitation = mongoose.model('Invitation', invitationSchema);
+
+module.exports = { User, Event };
