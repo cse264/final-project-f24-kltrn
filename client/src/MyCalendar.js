@@ -33,8 +33,9 @@ function MyCalendar() {
 
   //Enable the authorize button when both APIs are loaded
   const maybeEnableButtons = () => {
-    if (window.gapi.client && tokenClientRef.current) {
-      document.getElementById('authorize_button').style.visibility = 'visible';
+    const authorizeButton = document.getElementById('authorize_button');
+    if (window.gapi.client && tokenClientRef.current && authorizeButton) {
+      authorizeButton.style.visibility = 'visible';
     }
   };
 
