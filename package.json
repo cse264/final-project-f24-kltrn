@@ -18,15 +18,20 @@
     "nodemon": "^3.1.7"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.15",
+    "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/react": "^6.1.15",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "fullcalendar": "^6.1.15",
     "gapi-script": "^1.2.0",
     "google-auth-library": "^9.15.0",
     "googleapis": "^144.0.0",
     "mongodb": "^6.11.0",
-    "mongoose": "^8.8.3"
+    "mongoose": "^8.8.3",
+    "react-calendar": "^5.1.0"
   }
 }
