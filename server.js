@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser');
 const { google } = require('googleapis');
 
 // Getting schema from schema file
-const { User, Session } = require('./db_schema/Schema.js');
+const { User } = require('./db_schema/Schema.js');
 
 // App and port constants
 const app = express();
@@ -24,6 +24,10 @@ app.use(cookieParser());
 
 // For parsing json
 app.use(express.json());
+
+// For event routes
+const eventRoutes = require('./events.js');
+app.use('/events', eventRoutes);
 
 // For connecting to google api
 const oAuth2Client = new OAuth2Client(
