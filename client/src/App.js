@@ -5,6 +5,7 @@ import MyCalendar from './MyCalendar';
 import CreateEvent from './CreateEvent';
 import Invitations from './Invitations';
 import MyEvents from './MyEvents';
+import pic from './planpallogo.png';
 import './App.css';
 
 
@@ -14,6 +15,7 @@ function App () {
       <BrowserRouter>
         <div className="App">
         <header className="banner">
+            <img src={pic} className="banner-logo" />
             <h1>PlanPal</h1>
             <nav>
               <h2><Link to="/calendar" className="nav-link">Calendar</Link></h2>  
