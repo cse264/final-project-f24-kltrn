@@ -17,6 +17,16 @@ Once you add those three environmental variables you should be able to run the p
 
 Make sure you are in the final-project-f24-kltrn folder. Run `npm install` and then `npm run dev`.
 
+### Event and Invitation Endpoints
+
+* `POST /events` - Creates a new event and sends invitations to the specified invitees.
+* `PUT /events/:id` - Updates an existing event's details such as title, description, time, and location.
+* `GET /events/organizer/:user_id` - Retrieves all events created by a specific organizer.
+* `GET /events/invitee/:user_id` - Retrieves all events that a specific invitee has accepted invitations for.
+* `GET /events/:id` - Retrieves details of a single event by its ID.
+* `DELETE /events/:id` - Deletes an event by its ID along with all associated invitations.
+* `PUT /invitations/:id` - Updates the status of an invitation (e.g., pending, accepted, declined).
+* `GET /invitations/:user_id` - Retrieves all invitations received by a specific invitee, including associated event details.
 
 ### Build a web app in a team of 4-5
 
