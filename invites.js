@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-// All endpoints in this file start with /invitation followed by whatever is declared in the router.post('/..') section
+// All endpoints in this file start with /invitations followed by whatever is declared in the router.post('/..') section
 
 // Getting schema from schema file
 const { Invitation } = require('./db_schema/Schema.js');

@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-// All endpoints in this file start with /event followed by whatever is declared in the router.post('/..') section
+// All endpoints in this file start with /events followed by whatever is declared in the router.post('/..') section
 
 // Getting schema from schema file
 const { User, Invitation, Event } = require('./db_schema/Schema.js');
 
-// Post an event and associated invitation - 'http://localhost:8000/event'
+// Post an event and associated invitation - 'http://localhost:8000/events'
 router.post('/', async (req, res) => {
     const { title, description, startTime, endTime, location, organizerId, invitees } = req.body;
 
@@ -15,7 +15,7 @@ router.post('/', async (req, res) => {
     }
 
     try {
-        // Getting the associated organizer email for the invitation
+        // Checking organizer exists
         const organizer = await User.findById(organizerId);
         if (!organizer || organizer.role !== 'Event Organizer') {
             return res.status(404).json({ message: 'Organizer not found or invalid role.' });
@@ -47,7 +47,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Edit an existing event - 'http://localhost:8000/event/:id'
+// Edit an existing event - 'http://localhost:8000/events/:id'
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
     const { title, description, startTime, endTime, location } = req.body;
@@ -67,16 +67,18 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// Retrieve events for an event organizer - 'http://localhost:8000/event/organizer/:user_id'
+// Retrieve events for an event organizer - 'http://localhost:8000/events/organizer/:user_id'
 router.get('/organizer/:user_id', async (req, res) => {
     const userId = req.params.user_id;
 
     try {
+        // Check organizer exists
         const organizer = await User.findById(userId);
         if (!organizer || organizer.role !== 'Event Organizer') {
             return res.status(404).json({ message: 'Organizer not found or invalid role.' });
         }
 
+        // Get events for organizer
         const userEvents = await Event.find({ organizerId: userId });
         if (!userEvents || userEvents.length === 0) {
             return res.status(404).json({ message: 'No events found for this user' });
@@ -89,16 +91,18 @@ router.get('/organizer/:user_id', async (req, res) => {
     }
 });
 
-// Retrieve events for an invitee - 'http://localhost:8000/event/invitee/:user_id'
+// Retrieve accepted events for an invitee - 'http://localhost:8000/events/invitee/:user_id'
 router.get('/invitee/:user_id', async (req, res) => {
     const userId = req.params.user_id;
 
     try {
+        // Check that invitee exists
         const invitee = await User.findById(userId);
         if (!invitee || invitee.role !== 'Invitee') {
             return res.status(404).json({ message: 'Invitee not found or invalid role.' });
         }
 
+        // Collecting accepted events for an invitee
         const invitations = await Invitation.find({ inviteeId: userId, status: 'accepted' }).populate('eventId');
         const events = invitations.map((invitation) => invitation.eventId);
 
@@ -109,7 +113,7 @@ router.get('/invitee/:user_id', async (req, res) => {
     }
 });
 
-// Retrieve a single event by id - 'http://localhost:8000/event/:id'
+// Retrieve a single event by id - 'http://localhost:8000/events/:id'
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
 
@@ -127,7 +131,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Deleting an event by id - 'http://localhost:8000/event/:id'
+// Deleting an event by id - 'http://localhost:8000/events/:id'
 router.delete('/:id', async (req, res) => {
     const { id } = req.params;
 
