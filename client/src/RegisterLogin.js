@@ -7,7 +7,7 @@ import pic from './calendar.png';
 const RegisterLogin = () => {
   const [userGoogleInfo, setUserGoogleInfo] = useState(null);
   const [showRoles, setShowRoles] = useState(false);
-  const { setRole, setIsLoggedIn } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const nav = useNavigate();
 
   // Google OAuth setup
@@ -70,13 +70,18 @@ const RegisterLogin = () => {
     }
 
     try {
-      await fetch('http://localhost:8000/google-login', {
+      const response = await fetch('http://localhost:8000/google-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...userGoogleInfo, role }),
         credentials: 'include',
       });
-      setRole(role);
+
+      const data = await response.json();
+      if (data.userId && data.userEmail) {
+        setUser({ userId: data.userId, userEmail: data.userEmail, role: role });
+      }
+
       setShowRoles(false); // Hide role selection
       // setIsLoggedIn(true); // Set user as logged in
       nav('/calendar'); // Navigate to calendar or another page after role selection

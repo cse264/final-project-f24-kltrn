@@ -92,7 +92,7 @@ app.post('/google-login', async (req, res) => {
       console.log('User added to database: ', email);
     }
 
-    res.status(200).json({ message: 'Google login via backend complete' });
+    res.status(200).json({ message: 'Google login via backend complete', userId: user._id, userEmail: user.email });
   } catch (err) {
     console.error('Error logging in user', err);
     res.status(400);
