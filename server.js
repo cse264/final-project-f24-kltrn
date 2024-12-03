@@ -30,6 +30,10 @@ app.use(express.json());
 const eventRoutes = require('./events.js');
 app.use('/events', eventRoutes);
 
+// For invitation routes
+const inviteRoutes = require('./invites.js');
+app.use('/invitations', inviteRoutes);
+
 // For connecting to google api
 const oAuth2Client = new OAuth2Client(
   process.env.CLIENT_ID,
