@@ -1,16 +1,21 @@
-import React, { useRef, useState, useEffect } from 'react';
-import pic from './calendar.png'; // Import the image here
-import './App.css'; // Add styles for the login container if needed
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from './UserContext';
+import './RegisterLogin.css';
+import pic from './calendar.png';
 
-const CLIENT_ID = '835824290802-l35n15ukorvso0q9ie4bk342lcb4t8j6.apps.googleusercontent.com';
-const API_KEY = 'AIzaSyDMZl4zNDY457YuPlsguti7hiJpTXo-d4Q';
-const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
-const SCOPES = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
+const RegisterLogin = () => {
+  const [userGoogleInfo, setUserGoogleInfo] = useState(null);
+  const [showRoles, setShowRoles] = useState(false);
+  const { setRole, setIsLoggedIn } = useContext(UserContext);
+  const nav = useNavigate();
 
-function RegisterLogin({ setShowRoles, setUserGoogleInfo, setIsLoggedIn, setEvents }) {
-  const [email, setEmail] = useState(null);
-  const [isLoggedIn, setLoggedIn] = useState(false);
-  const [showRoles, setShowRolesState] = useState(false); // Local state for role selection
+  // Google OAuth setup
+  const CLIENT_ID = '835824290802-l35n15ukorvso0q9ie4bk342lcb4t8j6.apps.googleusercontent.com';
+  const API_KEY = 'AIzaSyDMZl4zNDY457YuPlsguti7hiJpTXo-d4Q';
+  const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
+  const SCOPES = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile';
+  
   const tokenClientRef = useRef(null);
 
   const initializeGapiClient = async () => {
@@ -35,57 +40,19 @@ function RegisterLogin({ setShowRoles, setUserGoogleInfo, setIsLoggedIn, setEven
 
     try {
       const newToken = window.gapi.client.getToken().access_token;
+      // setIsLoggedIn(true); // Set the logged-in state to true
 
       const userInfoResponse = await window.gapi.client.request({
         path: 'https://www.googleapis.com/oauth2/v3/userinfo',
       });
 
       const { name, email } = userInfoResponse.result;
-      setUserGoogleInfo({ name, email });
-      setEmail(email);
-      setLoggedIn(true);
+      setUserGoogleInfo({ name, email }); // Set user info
 
-      const response = await fetch('http://localhost:8000/user-exists', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-        credentials: 'include',
-      });
-
-      const data = await response.json();
-
-      if (!data.exists) {
-        setShowRoles(true);
-        setShowRolesState(true); // Show the role selection screen
-      } else {
-        setShowRoles(false);
-        setIsLoggedIn(true);
-        await listUpcomingEvents();
-      }
+      // Proceed to role selection
+      setShowRoles(true);
     } catch (error) {
-      console.error('Error during sign-in:', error);
-    }
-  };
-
-  const listUpcomingEvents = async () => {
-    try {
-      const response = await window.gapi.client.calendar.events.list({
-        calendarId: 'primary',
-        timeMin: new Date().toISOString(),
-        showDeleted: false,
-        singleEvents: true,
-        maxResults: 10,
-        orderBy: 'startTime',
-      });
-
-      const events = response.result.items;
-      setEvents(events.map(event => ({
-        title: event.summary,
-        start: event.start.dateTime || event.start.date,
-        end: event.end.dateTime || event.end.date,
-      })));
-    } catch (error) {
-      console.error('Error fetching events', error);
+     console.log('Error during sign-in:', error);
     }
   };
 
@@ -98,15 +65,24 @@ function RegisterLogin({ setShowRoles, setUserGoogleInfo, setIsLoggedIn, setEven
   };
 
   const handleRoleSubmit = async (role) => {
-    if (!role || !email) {
+    if (!role || !userGoogleInfo) {
       return;
     }
 
-    // Store the selected role and hide the role selection screen
-    // setShowRoles(false);
-    // setShowRolesState(false); // Hide the role selection screen
-    setIsLoggedIn(true);
-    // setUserGoogleInfo({ ...setUserGoogleInfo, role }); // Update user role
+    try {
+      await fetch('http://localhost:8000/google-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...userGoogleInfo, role }),
+        credentials: 'include',
+      });
+      setRole(role);
+      setShowRoles(false); // Hide role selection
+      // setIsLoggedIn(true); // Set user as logged in
+      nav('/calendar'); // Navigate to calendar or another page after role selection
+    } catch (error) {
+      console.error('Error submitting role:', error);
+    }
   };
 
   useEffect(() => {
@@ -141,39 +117,27 @@ function RegisterLogin({ setShowRoles, setUserGoogleInfo, setIsLoggedIn, setEven
   return (
     <div>
       <div className="login-container">
-      {!isLoggedIn && (
-        <div>
-          <img src={pic} alt="calendar" className="image"></img>
-          <h2>Log in to PlanPal!</h2>
-          <button id="authorize_button" onClick={handleAuthClick}>
-            Log In with Google
-          </button>
-        </div>
-      )}
+        {!userGoogleInfo && (
+          <div>
+            <img src={pic} alt="calendar" className="image" />
+            <h2>Log in to PlanPal!</h2>
+            <button id="authorize_button" onClick={handleAuthClick}>
+              Log In with Google
+            </button>
+          </div>
+        )}
       </div>
 
-      {isLoggedIn && showRoles && (
+      {showRoles && (
         <div className="role-select-container">
           <div className="role-select-box">
-            <h3>Please select your role: </h3>
+            <h3>Welcome {userGoogleInfo?.name}!</h3>
+            <h3>Please select your role:</h3>
             <button onClick={() => handleRoleSubmit('Event Organizer')}>Event Organizer</button>
             <button onClick={() => handleRoleSubmit('Invitee')}>Invitee</button>
           </div>
         </div>
       )}
-
-      {/* {isLoggedIn && !showRoles && (
-        <div className="calendar-container">
-          <FullCalendar
-            plugins={[dayGridPlugin]}
-            initialView="dayGridMonth"
-            events={events}
-          />
-          <button id="signout_button" onClick={handleSignoutClick}>
-            Sign Out
-          </button>
-        </div>
-      )} */}
     </div>
   );
 }
