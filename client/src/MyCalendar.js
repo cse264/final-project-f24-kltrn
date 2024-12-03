@@ -8,7 +8,7 @@ import pic from './calendar.png';
 // Google Calendar Integration
 function MyCalendar() {
   const [events, setEvents] = useState([]);
-  const { isLoggedIn, setIsLoggedIn, login, token } = useAuth(); // Use context values
+  const { isLoggedIn, setIsLoggedIn, login } = useAuth(); // Use context values
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
   // const [userEmail, setUserEmail] = useState(null); 
 
@@ -41,16 +41,20 @@ function MyCalendar() {
     if (resp.error) {
       throw resp;
     }
-    // setIsLoggedIn(true);
-    // const userInfoResponse = await window.gapi.client.request({
-    //   path: 'https://www.googleapis.com/oauth2/v3/userinfo',
-    // });
-
-    // setUserEmail(userInfoResponse.result.email);
-    const newToken = window.gapi.client.getToken().access_token;
-    login(newToken); 
+    
+    // Instead of manually sending a POST request, the backend will handle the OAuth callback as a GET request.
+    const userInfoResponse = await window.gapi.client.request({
+      path: 'https://www.googleapis.com/oauth2/v3/userinfo',
+    });
+  
+    // Store the email in the Auth context
+    const userEmail = userInfoResponse.result.email;
+    login(userEmail);
+    
+    // List upcoming events after successful authentication
     await listUpcomingEvents();
   };
+  
 
   //show upcoming events after authentication
   const listUpcomingEvents = async () => {
