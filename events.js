@@ -4,42 +4,38 @@ const router = express.Router();
 // All endpoints in this file start with /event followed by whatever is declared in the router.post('/..') section
 
 // Getting schema from schema file
-const { Event } = require('./db_schema/Schema.js');
+const { User, Invitation, Event } = require('./db_schema/Schema.js');
 
 // Post an event and associated invitation - 'http://localhost:8000/event'
 router.post('/', async (req, res) => {
-    const { title, description, startTime, endTime, location, userId, invitees } = req.body;
+    const { title, description, startTime, endTime, location, organizerId, invitees } = req.body;
 
-    if (!title || !startTime || !endTime || !userId) {
-        res.status(400).json({ message: 'Title, start time, end time, or userId missing.'});
+    if (!title || !startTime || !endTime || !organizerId) {
+        res.status(400).json({ message: 'Title, start time, end time, or organizerId missing.'});
     }
 
     try {
         // Getting the associated organizer email for the invitation
-        const user = await User.findById(userId);
-        if (!user || !user.email) {
-            return res.status(404).json({ message: 'Organizer email not found.' });
+        const organizer = await User.findById(organizerId);
+        if (!organizer || organizer.role !== 'Event Organizer') {
+            return res.status(404).json({ message: 'Organizer not found or invalid role.' });
         }
-        const organizerEmail = user.email;
-        
-        // If there are invitees, validate that all invitee emails exist in the database
-        if (Array.isArray(invitees) && invitees.length > 0) {
-            const inviteeValidationPromises = invitees.map((email) => User.findOne({ email }));
-            const inviteeResults = await Promise.all(inviteeValidationPromises);
 
-            // Check for any missing invitees
-            const missingInvitees = invitees.filter((_, index) => !inviteeResults[index]);
-            if (missingInvitees.length > 0) {
-                return res.status(400).json({ message: 'Some invitees do not exist in the database: ', missingInvitees });
-            }
+        // Validating invitees exist in db
+        const inviteeValidationPromises = invitees.map((inviteeId) => User.findById(inviteeId));
+        const inviteeResults = await Promise.all(inviteeValidationPromises);
+        const missingInvitees = invitees.filter((_, index) => !inviteeResults[index]);
+
+        if (missingInvitees.length > 0) {
+            return res.status(400).json({ message: 'Some invitees do not exist in the database: ', missingInvitees });
         }
 
         // Create event
-        const newEvent = await Event.create({ title, description, startTime, endTime, location, userId, invitees });
+        const newEvent = await Event.create({ title, description, startTime, endTime, location, organizerId, invitees });
 
         // Create associated invitations
-        const invitationPromises = invitees.map((inviteeEmail) => {
-            return Invitation.create({ organizerEmail, inviteeEmail, status: 'pending' });
+        const invitationPromises = invitees.map((inviteeId) => {
+            return Invitation.create({ eventId: newEvent._id, inviteeId, status: 'pending' });
         });
         await Promise.all(invitationPromises);
 
@@ -54,10 +50,10 @@ router.post('/', async (req, res) => {
 // Edit an existing event - 'http://localhost:8000/event/:id'
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
-    const { title, description, startTime, endTime, location, invitees } = req.body;
+    const { title, description, startTime, endTime, location } = req.body;
 
     try {
-        const updateEvent = await Event.findByIdAndUpdate(id, { title, description, startTime, endTime, location, invitees}, { new: true, runValidators: true});
+        const updateEvent = await Event.findByIdAndUpdate(id, { title, description, startTime, endTime, location }, { new: true, runValidators: true});
 
         if (!updateEvent) {
             res.status(404).json({ message: 'Event not found'});
@@ -71,14 +67,17 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// Retrieve events from a specific user - 'http://localhost:8000/event/user/:user_id'
-router.get('/user/:user_id', async (req, res) => {
+// Retrieve events for an event organizer - 'http://localhost:8000/event/organizer/:user_id'
+router.get('/organizer/:user_id', async (req, res) => {
     const userId = req.params.user_id;
 
     try {
+        const organizer = await User.findById(userId);
+        if (!organizer || organizer.role !== 'Event Organizer') {
+            return res.status(404).json({ message: 'Organizer not found or invalid role.' });
+        }
 
-        const userEvents = await Event.find({ userId });
-
+        const userEvents = await Event.find({ organizerId: userId });
         if (!userEvents || userEvents.length === 0) {
             return res.status(404).json({ message: 'No events found for this user' });
         }
@@ -90,7 +89,27 @@ router.get('/user/:user_id', async (req, res) => {
     }
 });
 
-// Retrieve a single event by id - - 'http://localhost:8000/event/:id'
+// Retrieve events for an invitee - 'http://localhost:8000/event/invitee/:user_id'
+router.get('/invitee/:user_id', async (req, res) => {
+    const userId = req.params.user_id;
+
+    try {
+        const invitee = await User.findById(userId);
+        if (!invitee || invitee.role !== 'Invitee') {
+            return res.status(404).json({ message: 'Invitee not found or invalid role.' });
+        }
+
+        const invitations = await Invitation.find({ inviteeId: userId, status: 'accepted' }).populate('eventId');
+        const events = invitations.map((invitation) => invitation.eventId);
+
+        res.status(200).json({ events });
+    } catch (error) {
+        console.error('Error retrieving events:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+// Retrieve a single event by id - 'http://localhost:8000/event/:id'
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
 
@@ -118,6 +137,9 @@ router.delete('/:id', async (req, res) => {
         if (!deletedEvent) {
             return res.status(404).json({ message: 'Event not found' });
         }
+
+        // Deleting associated invitations
+        await Invitation.deleteMany({ eventId: id });
 
         res.status(200).json({ message: 'Event deleted successfully', event: deletedEvent });
     } catch (error) {

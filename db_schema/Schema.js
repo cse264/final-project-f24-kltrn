@@ -12,14 +12,13 @@ const eventSchema = new mongoose.Schema({
     startTime: { type: Date, required: true},
     endTime: { type: Date, required: true},
     location: { type: String },
-    userId: { type: mongoose.Schema.Types.ObjectId, required: true },
-    invitees: [{ type: mongoose.Schema.Types.ObjectId }],
+    organizerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 });
 
 const invitationSchema = new mongoose.Schema({
-    organizerEmail: { type: String, required: true },
-    inviteeEmail: { type: String, required: true },
-    status: { type: String, required: true},
+    eventId: { type: mongoose.Schema.Types.ObjectId, ref: 'Event', required: true },
+    inviteeId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    status: { type: String, required: true, enum: ['pending', 'accepted', 'declined']},
 })
 
 const User = mongoose.model('User', userSchema);
