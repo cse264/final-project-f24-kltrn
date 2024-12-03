@@ -7,7 +7,7 @@ import pic from './calendar.png';
 const RegisterLogin = () => {
   const [userGoogleInfo, setUserGoogleInfo] = useState(null);
   const [showRoles, setShowRoles] = useState(false);
-  const { setRole, setIsLoggedIn } = useContext(UserContext);
+  const { setRole, setUserEmail } = useContext(UserContext);
   const nav = useNavigate();
 
   // Google OAuth setup
@@ -48,7 +48,7 @@ const RegisterLogin = () => {
 
       const { name, email } = userInfoResponse.result;
       setUserGoogleInfo({ name, email }); // Set user info
-
+      setUserEmail(email);
       // Proceed to role selection
       setShowRoles(true);
     } catch (error) {
