@@ -1,5 +1,110 @@
-import React, { useState, useEffect, useRef } from 'react';
+// import React, { useState, useEffect, useContext } from 'react';
+// import { UserContext } from './UserContext'; // Import UserContext for managing login state
+// import FullCalendar from '@fullcalendar/react';
+// import dayGridPlugin from '@fullcalendar/daygrid';
+// import './App.css';
+// import pic from './calendar.png';
+
+// function MyCalendar() {
+//   const { isLoggedIn, setIsLoggedIn, userGoogleInfo, setUserGoogleInfo, setUserRole } = useContext(UserContext); // Use UserContext for state
+//   const [events, setEvents] = useState([]);
+//   const [showRoles, setShowRoles] = useState(false);
+
+//   // Function to fetch events from Google Calendar API
+//   const listUpcomingEvents = async () => {
+//     try {
+//       const response = await window.gapi.client.calendar.events.list({
+//         calendarId: 'primary',
+//         timeMin: new Date().toISOString(),
+//         showDeleted: false,
+//         singleEvents: true,
+//         maxResults: 10,
+//         orderBy: 'startTime',
+//       });
+
+//       const events = response.result.items;
+//       setEvents(events.map(event => ({
+//         title: event.summary,
+//         start: event.start.dateTime || event.start.date,
+//         end: event.end.dateTime || event.end.date,
+//       })));
+//     } catch (error) {
+//       console.error('Error fetching events', error);
+//     }
+//   };
+
+//   // Once the user is logged in, show events
+//   useEffect(() => {
+//     if (isLoggedIn && userGoogleInfo) {
+//       listUpcomingEvents();
+//     }
+//   }, [isLoggedIn, userGoogleInfo]);
+
+//   // Handle role submission after login
+//   const handleRoleSubmit = async (role) => {
+//     if (!role || !userGoogleInfo) {
+//       return;
+//     }
+
+//     // Store role in UserContext or make an API call to save the role
+//     setUserRole(role);
+
+//     // Hide role selection after selecting a role
+//     setShowRoles(false);
+//   };
+
+//   // Handle sign-out logic
+//   const handleSignoutClick = () => {
+//     // Sign out using the UserContext to clear authentication state
+//     setIsLoggedIn(false);
+//     setUserGoogleInfo(null); // Clear user info
+//     setUserRole(null); // Clear user role
+//   };
+
+//   return (
+//     <div>
+//       <div className="login-container">
+//         {!isLoggedIn && (
+//           <div>
+//             <img src={pic} alt="calendar" className="image"></img>
+//             <h2>Log in to PlanPal!</h2>
+//             {/* Log in button should trigger the Google OAuth logic */}
+//           </div>
+//         )}
+//       </div>
+
+//       {isLoggedIn && showRoles && (
+//         <div className="role-select-container">
+//           <div className="role-select-box">
+//             <h3>Welcome {userGoogleInfo.name}!</h3>
+//             <h3>Please select your role: </h3>
+//             <button onClick={() => handleRoleSubmit('Event Organizer')}>Event Organizer</button>
+//             <button onClick={() => handleRoleSubmit('Invitee')}>Invitee</button>
+//           </div>
+//         </div>
+//       )}
+
+//       {isLoggedIn && !showRoles && (
+//         <div className="calendar-container">
+//           <FullCalendar
+//             plugins={[dayGridPlugin]}
+//             initialView="dayGridMonth"
+//             events={events}
+//           />
+//           <button id="signout_button" onClick={handleSignoutClick}>
+//             Sign Out
+//           </button>
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
+
+// export default MyCalendar;
+
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import FullCalendar from '@fullcalendar/react';
+import { UserContext } from './UserContext'; // Import UserContext for managing login state
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { useAuth } from './Authentication';
 import './App.css';
@@ -8,7 +113,7 @@ import pic from './calendar.png';
 // Google Calendar Integration
 function MyCalendar() {
   const [events, setEvents] = useState([]);
-  const { isLoggedIn, setIsLoggedIn, login, token } = useAuth(); // Use context values
+  const { isLoggedIn, setIsLoggedIn, login, token } = useContext(UserContext); // Use context values
   const [ userGoogleInfo, setUserGoogleInfo] = useState(null);
   const [ showRoles, setShowRoles ] = useState(false);
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -187,7 +292,6 @@ function MyCalendar() {
       {isLoggedIn && showRoles && (
         <div className="role-select-container">
           <div className="role-select-box">
-            <h3>Welcome {userGoogleInfo.name}!</h3>
             <h3>Please select your role: </h3>
             <button onClick={() => handleRoleSubmit('Event Organizer')}>Event Organizer</button>
             <button onClick={() => handleRoleSubmit('Invitee')}>Invitee</button>
