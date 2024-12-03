@@ -33,9 +33,24 @@ const Invitations = () => {
     return <div>{error}</div>;
   }
   return (
-    <div>
+    <div className="invitations-container">
       <h2>View your invitations here</h2>
-      {/*SHOW INVITATIONS*/}
+      <div className="invitations-list">
+        {invitations.length > 0 ? (
+          invitations.map((invitation) => (
+            <div key={invitation.invitationId} className="invitation-card">
+              <h3>{invitation.event.title}</h3>
+              <p><strong>Description:</strong> {invitation.event.description || ''}</p>
+              <p><strong>Location:</strong> {invitation.event.location || ''}</p>
+              <p><strong>Start Time:</strong> {new Date(invitation.event.startTime || '').toLocaleString()}</p>
+              <p><strong>End Time:</strong> {new Date(invitation.event.endTime || '').toLocaleString()}</p>
+              <p className="status"><strong>Status:</strong> {invitation.status || ''}</p>
+            </div>
+          ))
+        ) : (
+          <p>No invitations available.</p>
+        )}
+      </div>
     </div>
   );
 };
