@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
+// All endpoints in this file start with /event followed by whatever is declared in the router.post('/..') section
+
 // Getting schema from schema file
 const { Event } = require('./db_schema/Schema.js');
 
-// Post an event
+// Post an event and associated invitation - 'http://localhost:8000/event'
 router.post('/', async (req, res) => {
     const { title, description, startTime, endTime, location, userId, invitees } = req.body;
 
@@ -13,7 +15,33 @@ router.post('/', async (req, res) => {
     }
 
     try {
+        // Getting the associated organizer email for the invitation
+        const user = await User.findById(userId);
+        if (!user || !user.email) {
+            return res.status(404).json({ message: 'Organizer email not found.' });
+        }
+        const organizerEmail = user.email;
+        
+        // If there are invitees, validate that all invitee emails exist in the database
+        if (Array.isArray(invitees) && invitees.length > 0) {
+            const inviteeValidationPromises = invitees.map((email) => User.findOne({ email }));
+            const inviteeResults = await Promise.all(inviteeValidationPromises);
+
+            // Check for any missing invitees
+            const missingInvitees = invitees.filter((_, index) => !inviteeResults[index]);
+            if (missingInvitees.length > 0) {
+                return res.status(400).json({ message: 'Some invitees do not exist in the database: ', missingInvitees });
+            }
+        }
+
+        // Create event
         const newEvent = await Event.create({ title, description, startTime, endTime, location, userId, invitees });
+
+        // Create associated invitations
+        const invitationPromises = invitees.map((inviteeEmail) => {
+            return Invitation.create({ organizerEmail, inviteeEmail, status: 'pending' });
+        });
+        await Promise.all(invitationPromises);
 
         res.status(200).json({ event: newEvent });
     }
@@ -23,7 +51,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Edit an existing event
+// Edit an existing event - 'http://localhost:8000/event/:id'
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
     const { title, description, startTime, endTime, location, invitees } = req.body;
@@ -43,7 +71,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// Retrieve events from a specific user
+// Retrieve events from a specific user - 'http://localhost:8000/event/user/:user_id'
 router.get('/user/:user_id', async (req, res) => {
     const userId = req.params.user_id;
 
@@ -62,7 +90,7 @@ router.get('/user/:user_id', async (req, res) => {
     }
 });
 
-// Retrieve a single event by id
+// Retrieve a single event by id - - 'http://localhost:8000/event/:id'
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
 
@@ -80,7 +108,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Deleting an event by id
+// Deleting an event by id - 'http://localhost:8000/event/:id'
 router.delete('/:id', async (req, res) => {
     const { id } = req.params;
 
