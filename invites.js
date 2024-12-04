@@ -4,7 +4,7 @@ const router = express.Router();
 // All endpoints in this file start with /invitations followed by whatever is declared in the router.post('/..') section
 
 // Getting schema from schema file
-const { Invitation } = require('./db_schema/Schema.js');
+const { User, Invitation } = require('./db_schema/Schema.js');
 
 // Updating an invitation status - 'http://localhost:8000/invitations/:id'
 router.put('/:id', async (req, res) => {
@@ -35,8 +35,8 @@ router.put('/:id', async (req, res) => {
 });
 
 // Get list of invitations that an invitee has received - 'http://localhost:8000/invitations/:user_id'
-router.get('/:email', async (req, res) => {
-    const userId = req.params.email;
+router.get('/:user_id', async (req, res) => {
+    const userId = req.params.user_id;
 
     try {
         const user = await User.findById(userId);
