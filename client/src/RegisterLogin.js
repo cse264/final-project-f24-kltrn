@@ -49,8 +49,21 @@ const RegisterLogin = () => {
       const { name, email } = userInfoResponse.result;
       setUserGoogleInfo({ name, email }); // Set user info
 
-      // Proceed to role selection
-      setShowRoles(true);
+      const response = await fetch('http://localhost:8000/user-exists', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+        credentials: 'include',
+      });
+
+      const data = await response.json();
+      if (!data.exists) {
+        setShowRoles(true);
+      }
+      else {
+        setShowRoles(false);
+        nav('/calendar');
+      }
     } catch (error) {
      console.log('Error during sign-in:', error);
     }
