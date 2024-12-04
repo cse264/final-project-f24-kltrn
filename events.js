@@ -22,16 +22,18 @@ router.post('/', async (req, res) => {
         }
 
         // Validating invitees exist in db
-        const inviteeValidationPromises = invitees.map((inviteeId) => User.findById(inviteeId));
+        const inviteeValidationPromises = invitees.map((email) => User.findOne({ email }));
         const inviteeResults = await Promise.all(inviteeValidationPromises);
-        const missingInvitees = invitees.filter((_, index) => !inviteeResults[index]);
+        const missingInvitees = invitees.filter((email, index) => !inviteeResults[index]);
 
         if (missingInvitees.length > 0) {
             return res.status(400).json({ message: 'Some invitees do not exist in the database: ', missingInvitees });
         }
 
+        const inviteeIds = inviteeResults.map((user) => user._id);
+
         // Create event
-        const newEvent = await Event.create({ title, description, startTime, endTime, location, organizerId, invitees });
+        const newEvent = await Event.create({ title, description, startTime, endTime, location, organizerId, invitees: inviteeIds });
 
         // Create associated invitations
         const invitationPromises = invitees.map((inviteeId) => {
