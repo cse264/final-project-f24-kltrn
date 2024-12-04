@@ -11,7 +11,7 @@ router.post('/', async (req, res) => {
     const { title, description, startTime, endTime, location, organizerId, invitees } = req.body;
 
     if (!title || !startTime || !endTime || !organizerId) {
-        res.status(400).json({ message: 'Title, start time, end time, or organizerId missing.'});
+        return res.status(400).json({ message: 'Title, start time, end time, or organizerId missing.'});
     }
 
     try {
@@ -36,7 +36,7 @@ router.post('/', async (req, res) => {
         const newEvent = await Event.create({ title, description, startTime, endTime, location, organizerId, invitees: inviteeIds });
 
         // Create associated invitations
-        const invitationPromises = invitees.map((inviteeId) => {
+        const invitationPromises = inviteeIds.map((inviteeId) => {
             return Invitation.create({ eventId: newEvent._id, inviteeId, status: 'pending' });
         });
         await Promise.all(invitationPromises);
