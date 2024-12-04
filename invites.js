@@ -4,7 +4,7 @@ const router = express.Router();
 // All endpoints in this file start with /invitations followed by whatever is declared in the router.post('/..') section
 
 // Getting schema from schema file
-const { Invitation } = require('./db_schema/Schema.js');
+const { User, Invitation } = require('./db_schema/Schema.js');
 
 // Updating an invitation status - 'http://localhost:8000/invitations/:id'
 router.put('/:id', async (req, res) => {
