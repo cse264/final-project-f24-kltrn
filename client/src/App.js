@@ -4,7 +4,8 @@ import { UserProvider, UserContext } from './UserContext'; // Ensure to import U
 import MyCalendar from './MyCalendar';
 import CreateEvent from './CreateEvent';
 import Invitations from './Invitations';
-import MyEvents from './MyEvents';
+import MyOrganizerEvents from './MyOrganizerEvents';
+import MyInviteeEvents from './MyInviteeEvents';
 import RegisterLogin from './RegisterLogin';
 import pic from './planpallogo.png';
 import './App.css';
@@ -29,7 +30,8 @@ function App() {
             <Route path="/" element={<RegisterLogin />} /> 
             <Route path="/calendar" element={<MyCalendar />} />
             <Route path="/create" element={<CreateEvent />} />
-            <Route path="/myevents" element={<MyEvents />} />
+            <Route path="/myorganizerevents" element={<MyOrganizerEvents />} />
+            <Route path="/myinviteeevents" element={<MyInviteeEvents />} />
             <Route path="/invitations" element={<Invitations />} />
           </Routes>
         </div>
@@ -51,14 +53,14 @@ const RoleBasedNav = () => {
       {role === 'Event Organizer' && (
         <>
           <h2><Link to="/create" className="nav-link">Create Event</Link></h2>
-          <h2><Link to="/myevents" className="nav-link">My Events</Link></h2>
+          <h2><Link to="/myorganizerevents" className="nav-link">My Events</Link></h2>
         </>
       )}
 
       {role === 'Invitee' && (
         <>
           <h2><Link to="/invitations" className="nav-link">Invitations</Link></h2>
-          <h2><Link to="/myevents" className="nav-link">My Events</Link></h2>
+          <h2><Link to="/myinviteeevents" className="nav-link">My Events</Link></h2>
         </>
       )}
     </>
