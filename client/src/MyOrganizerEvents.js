@@ -57,7 +57,7 @@ const MyOrganizerEvents = () => {
   }, []); 
 
   return (
-    <div className="event-container">
+    <div className="container">
       <h2 className="event-header">Your events:</h2>
       {response.length > 0 && hasEvents ? (
         <div className="event-grid">
