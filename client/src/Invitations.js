@@ -20,8 +20,10 @@ const Invitations = () => {
           throw new Error('Failed to fetch invitations');
         }
         const data = await response.json();
+        console.log("DATA")
+        console.log(data);
         setInvitations(data.invitations);
-        console.log(data.invitations);
+        
       } catch (err) {
         console.log('Error fetching invitations');
       }
@@ -65,12 +67,14 @@ const Invitations = () => {
           invitations.map((invitation) => (
             <div key={invitation.invitationId} className="invitation-card">
               <h3>{invitation.event.title}</h3>
-              {/* <h3>Invited by: {invitation.event.organizer.id}</h3> */}
+              <p className="inviter">Invited by: {invitation.event.organizer.name}</p>
               <p><strong>Description:</strong> {invitation.event.description || ''}</p>
               <p><strong>Location:</strong> {invitation.event.location || ''}</p>
               <p><strong>Start Time:</strong> {new Date(invitation.event.startTime || '').toLocaleString()}</p>
               <p><strong>End Time:</strong> {new Date(invitation.event.endTime || '').toLocaleString()}</p>
-              <p className="status"><strong>Status:</strong> {invitation.status ? invitation.status.charAt(0).toUpperCase() + invitation.status.slice(1) : ''}</p>
+              <p className={`status ${invitation.status ? invitation.status.toLowerCase() : ''}`}>
+                <strong>Status:</strong> {invitation.status ? invitation.status.charAt(0).toUpperCase() + invitation.status.slice(1) : ''}
+              </p>
               <div className="invitation-status-buttons">
                 <button onClick={() => updateInvitationStatus(invitation.invitationId, 'accepted')}>Accept</button>
                 <button onClick={() => updateInvitationStatus(invitation.invitationId, 'declined')}>Decline</button>

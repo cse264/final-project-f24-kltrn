@@ -207,6 +207,12 @@ button.nav-link {
   align-items: center;
 }
 
+.inviter{
+  font-family: "Comfortaa", sans-serif;
+  font-size: 20px;
+  text-align: left;
+}
+
 .modal {
   position: fixed;
   top: 0;

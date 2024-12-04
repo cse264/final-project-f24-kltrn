@@ -26,7 +26,7 @@
   
   .invitation-card h3 {
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     color: #333;
   }
   
@@ -61,4 +61,16 @@
 
 .invitation-status-buttons button:hover {
     background-color: #633874;
+}
+
+.status.accepted {
+  color: green; 
+}
+
+.status.pending {
+  color: orange; 
+}
+
+.status.declined {
+  color: red; 
 }

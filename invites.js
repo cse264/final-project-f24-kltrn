@@ -66,9 +66,15 @@ router.get('/:user_id', async (req, res) => {
             return res.status(404).json({ message: 'Invitee not found or invalid role.' });
         }
 
-        const invitations = await Invitation.find({inviteeId: userId })
-        .populate('eventId', 'title description startTime endTime location organizerId')
-        .populate('eventId.organizerId', 'name email');
+        const invitations = await Invitation.find({ inviteeId: userId })
+            .populate({
+                path: 'eventId',
+                select: 'title description startTime endTime location organizerId',
+                populate: {
+                    path: 'organizerId',  // Nested populate for organizerId
+                    select: 'name email', // Select only name and email from the User model
+                }
+            });
 
         if (invitations.length === 0) {
             return res.status(404).json({ message: 'No invitations found for this user' });
