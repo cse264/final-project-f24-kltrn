@@ -102,6 +102,7 @@ button.nav-link {
   align-items: center;
   margin: 0;
   text-align: center;
+  gap: 10px;
 }
 
 .event-container {

@@ -59,7 +59,7 @@ const Invitations = () => {
   }
   return (
     <div className="invitations-container">
-      <h2>View your invitations here</h2>
+      <h2>You have invitations to review:</h2>
       <div className="invitations-list">
         {invitations.length > 0 ? (
           invitations.map((invitation) => (

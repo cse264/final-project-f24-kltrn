@@ -70,6 +70,10 @@ const MyOrganizerEvents = () => {
                 <strong>Starts:</strong> {new Date(item.startTime).toLocaleString()} <br />
                 <strong>Ends:</strong> {new Date(item.endTime).toLocaleString()}
               </p>
+              <div class="form-container">
+              <button onClick={() => handleEdit(item._id)} className="edit-btn">Edit</button>
+              <button onClick={() => handleDelete(item._id)} className="delete-btn">Delete</button>
+              </div>
             </div>
           ))}
         </div>
