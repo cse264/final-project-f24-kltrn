@@ -84,6 +84,10 @@ nav h2 {
   margin-top: 20px;
 }
 
+.event-container .p{
+  color: #5e2979;
+}
+
 .calendar-container {
   margin: 20px;
   padding: 10px;
@@ -104,6 +108,14 @@ nav h2 {
   text-align: center;
 }
 
+.event-container {
+  font-family: "Comfortaa", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  text-align: center;
+}
 
 .login-container {
   display: flex;
@@ -141,6 +153,22 @@ nav h2 {
   font-size: 16px;
   font-family: inherit;
 }
+
+.edit-btn, .delete-btn {
+  justify-content: center;
+  background-color: #d2a7f1ec;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  display: flex;
+  align-items: center;
+}
+
 
 #authorize_button {
   justify-content: center;

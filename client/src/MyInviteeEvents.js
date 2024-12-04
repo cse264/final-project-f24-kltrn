@@ -28,7 +28,7 @@ const MyInviteeEvents = () => {
       await getEvents();
     }
     fetchData();
-  }, [user.userId]);
+  }, []);
 
   return (
     <div>
@@ -39,10 +39,10 @@ const MyInviteeEvents = () => {
           {response.map((item, index) => (
             <div key={index}>
               <h3>{item.title}</h3>
-              <p>{item.description}</p>
-              <p>{item.location}</p>
-              <p>{new Date(item.startTime).toLocaleString()}</p>
-              <p>{new Date(item.endTime).toLocaleString()}</p>
+              <p>Description: {item.description}</p>
+              <p>Location: {item.location}</p>
+              <p>Start: {new Date(item.startTime).toLocaleString()}</p>
+              <p>End: {new Date(item.endTime).toLocaleString()}</p>
             </div>
           ))}
         </div>
