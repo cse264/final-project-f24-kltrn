@@ -39,12 +39,13 @@ function App() {
 };
 
 const RoleBasedNav = () => {
-  const { role } = useContext(UserContext);
+  const { user } = useContext(UserContext);
+  console.log('Current user in RoleBasedNav:', user);
 
-  if (!role) {
-    return <h2>Loading...</h2>; 
+  if (!user || !user.role) {
+    return <h2>Loading...</h2>;
   }
-
+  const { role } = user; 
   return (
     <>
       {role === 'Event Organizer' && (
