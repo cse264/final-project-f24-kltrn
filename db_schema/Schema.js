@@ -8,11 +8,12 @@ const userSchema = new mongoose.Schema({
 
 const eventSchema = new mongoose.Schema({
     title: { type: String, required: true },
+    userEmail: {type: String},
     description: { type: String },
     startTime: { type: Date, required: true},
     endTime: { type: Date, required: true},
     location: { type: String },
-    // organizerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    organizerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 });
 
 const invitationSchema = new mongoose.Schema({

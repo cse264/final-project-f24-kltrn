@@ -159,6 +159,19 @@ app.get('/google-events', async (req, res) => {
 
 });
 
+// Getting Events
+app.get('/events/:userID', async (req,res)=>{
+  let query = {organizerId: mongoose.Types.ObjectId(req.params.userID)};
+  try{
+    let events = await Event.find(query);
+    res.json(events);
+  } catch(err){
+    console.error('Error getting events from Database', err);
+    res.status(400);
+  }
+
+});
+
 
 // Testing endpoints
 app.get('/', (req, res) => {
