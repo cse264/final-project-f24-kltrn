@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { UserContext } from './UserContext';
+import './App.css';
 
 const CreateEvent = () => {
   const { user } = useContext(UserContext);
@@ -59,6 +60,7 @@ const CreateEvent = () => {
   return (
     <div>
       <h2>Create an Event</h2>
+      <div className="form-container">
       {user.userId ? (
         <form onSubmit={handleCreateEvent}>
           <div>
@@ -120,11 +122,12 @@ const CreateEvent = () => {
               onChange={(e) => setInvitees(e.target.value)}
             />
           </div>
-          <button type="submit">Create Event</button>
+          <button id="authorize_button" type="submit">Create Event</button>
         </form>
       ) : (
         <p>You must be logged in to create an event.</p>
       )}
+      </div>
     </div>
   );
 };

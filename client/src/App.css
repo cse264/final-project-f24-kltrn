@@ -95,6 +95,15 @@ nav h2 {
   margin-right: auto;
 }
 
+.form-container {
+  font-family: "Comfortaa", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  text-align: center;
+}
+
 
 .login-container {
   display: flex;
