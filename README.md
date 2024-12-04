@@ -14,7 +14,7 @@ PlanPal allows users to view their own Google calendar, create events, and accep
 * As an event organizer, I want to see the RSVP status of the people I have invited. 
 * As an invitee, I want to be able to RSVP to another user’s event.
 * As an invitee, I want to be able to change my response to another user’s event. 
-* As a user, I want to sync events from a third-party calendar so I can see all my commitments in one place.
+* As a user, I want to view my events from my Google calendar so I can see my other commitments.
 * As a user, I want to be able to log out of my profile.
 
 ### Our Tech Stack
