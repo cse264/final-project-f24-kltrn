@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { UserContext } from './UserContext';
+import './MyInviteeEvents.css';
 
 const MyInviteeEvents = () => {
   const [response, setAnswer] = useState([]); // Initialize as an empty array
