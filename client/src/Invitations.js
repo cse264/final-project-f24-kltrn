@@ -20,8 +20,6 @@ const Invitations = () => {
           throw new Error('Failed to fetch invitations');
         }
         const data = await response.json();
-        console.log("DATA")
-        console.log(data);
         setInvitations(data.invitations);
         
       } catch (err) {
@@ -47,7 +45,9 @@ const Invitations = () => {
       const updatedInvitation = await response.json();
       setInvitations((prev) =>
         prev.map((invitation) =>
-          invitation.invitationId === invitationId ? updatedInvitation.invitation : invitation
+          invitation.invitationId === invitationId
+            ? { ...invitation, status: updatedInvitation.invitation.status }  // Only update the status
+            : invitation
         )
       );
     } catch (err) {

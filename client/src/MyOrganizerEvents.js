@@ -13,18 +13,31 @@ const MyOrganizerEvents = () => {
   const [endTime, setEndTime] = useState('');
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
-  const [invitees, setInvitees] = useState('');
-
+  const [invitees, setInvitees] = useState([]);
 
   async function getEvents() {
     try {
       console.log(user.userId);
       const answer = await fetch(`http://localhost:8000/events/organizer/${user.userId}`);
       const data = await answer.json();
+      console.log(data);
+  
       if (data.events && Array.isArray(data.events)) {
-        setAnswer(data.events); 
+        // Fetch the invitees for each event (if not included in the response already)
+        const eventsWithInvitees = await Promise.all(data.events.map(async (event) => {
+          const invitesResponse = await fetch(`http://localhost:8000/invitations/event/${event._id}`);
+          const invitesData = await invitesResponse.json();
+          const formattedInvitations = invitesData.invitations.map(invitation => ({
+            inviteeName: invitation.invitee.name,
+            inviteeEmail: invitation.invitee.email,
+            status: invitation.status,
+          }));
+          return { ...event, invitees: formattedInvitations };
+        }));
+  
+        setAnswer(eventsWithInvitees); // Set the events with invitees
       } else {
-        setAnswer([]); 
+        setAnswer([]);
         setHasEvents(false);
       }
     } catch (error) {
@@ -41,7 +54,6 @@ const MyOrganizerEvents = () => {
       return;
     }
   
-    // Helper function to format date
     const formatDate = (date) => {
       const d = new Date(date);
       return d.toISOString().slice(0, 16); // Format as YYYY-MM-DDTHH:MM
@@ -51,8 +63,8 @@ const MyOrganizerEvents = () => {
     setTitle(event.title || '');
     setDescription(event.description || '');
     setLocation(event.location || '');
-    setStartTime(formatDate(event.startTime) || ''); // Ensure correct format
-    setEndTime(formatDate(event.endTime) || ''); // Ensure correct format
+    setStartTime(formatDate(event.startTime) || '');
+    setEndTime(formatDate(event.endTime) || '');
     setInvitees(event.invitees && Array.isArray(event.invitees) ? event.invitees.join(', ') : '');
     setEditModalVisible(true);
   };
@@ -76,7 +88,7 @@ const MyOrganizerEvents = () => {
   
       if (!response.ok) throw new Error('Error updating event');
   
-      const updatedEventData = await response.json(); // Parse the JSON response
+      const updatedEventData = await response.json(); 
   
       // Update the state to reflect the changes
       setAnswer((prevEvents) =>
@@ -133,10 +145,25 @@ const MyOrganizerEvents = () => {
                 <strong>Starts:</strong> {new Date(item.startTime).toLocaleString()} <br />
                 <strong>Ends:</strong> {new Date(item.endTime).toLocaleString()}
               </p>
+              <div className="event-invitees">
+              <strong className="status-label">Invitee Statuses:</strong>
+              <ul>
+                {item.invitees && item.invitees.length > 0 ? (
+                  item.invitees.map((invitee, idx) => (
+                    <li key={idx}>
+                      {invitee.inviteeName} - {invitee.status}
+                    </li>
+                  ))
+                ) : (
+                  <li>No invitees yet.</li>
+                )}
+              </ul>
+            </div>
               <div className="form-container">
                 <button onClick={() => handleEdit(item._id)} className="btn">Edit</button>
                 <button onClick={() => handleDelete(item._id)} className="btn">Delete</button>
               </div>
+              
             </div>
           ))}
         </div>

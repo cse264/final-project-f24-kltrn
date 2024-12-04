@@ -4,7 +4,7 @@ const router = express.Router();
 // All endpoints in this file start with /invitations followed by whatever is declared in the router.post('/..') section
 
 // Getting schema from schema file
-const { User, Invitation } = require('./db_schema/Schema.js');
+const { Event, User, Invitation } = require('./db_schema/Schema.js');
 
 // Updating an invitation status - 'http://localhost:8000/invitations/:id'
 router.put('/:id', async (req, res) => {
@@ -71,8 +71,8 @@ router.get('/:user_id', async (req, res) => {
                 path: 'eventId',
                 select: 'title description startTime endTime location organizerId',
                 populate: {
-                    path: 'organizerId',  // Nested populate for organizerId
-                    select: 'name email', // Select only name and email from the User model
+                    path: 'organizerId', 
+                    select: 'name email', 
                 }
             });
 
@@ -104,6 +104,48 @@ router.get('/:user_id', async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+
+// Get list of invitations associated with an event - 'http://localhost:8000/invitations/event/:event_id'
+router.get('/event/:event_id', async (req, res) => {
+    const eventId = req.params.event_id;
+
+    try {
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+
+        // Find the invitations associated with the event
+        const invitations = await Invitation.find({ eventId: eventId })
+            .populate({
+                path: 'inviteeId',
+                select: 'name email'
+            });
+
+        // Check if no invitations are found
+        if (invitations.length === 0) {
+            return res.status(404).json({ message: 'No invitations found for this event' });
+        }
+
+        // Format the invitations for the response
+        const formattedInvitations = invitations.map(invitation => ({
+            invitationId: invitation._id,
+            status: invitation.status,
+            invitee: {
+                id: invitation.inviteeId._id,
+                name: invitation.inviteeId.name,
+                email: invitation.inviteeId.email
+            }
+        }));
+
+        // Return the formatted invitations
+        res.status(200).json({ invitations: formattedInvitations });
+    } catch (err) {
+        console.error('Error retrieving invitations for event:', err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 
 // Export the router
 module.exports = router;

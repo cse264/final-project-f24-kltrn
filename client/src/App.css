@@ -35,6 +35,13 @@ button.nav-link {
   background: none;
 }
 
+.status-label{
+  color: #5e2979;
+}
+
+.event-invitees{
+  padding-top: 10px;
+}
 
 .banner {
   display: flex;
