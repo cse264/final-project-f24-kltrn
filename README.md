@@ -31,6 +31,8 @@ Make sure you are in the final-project-f24-kltrn folder. Run `npm install` and t
 * `GET /invitations/:user_id` - Retrieves all invitations received by a specific invitee, including associated event details.
 * `GET /invitations/event/:event_id` - Get list of invitations associated with an event
 
+## Assignment Description
+
 ### Requirements:
 * Must have user accounts and different user roles (like user/Admin, free/paid, etc)
 * Must use a database (you choose)
