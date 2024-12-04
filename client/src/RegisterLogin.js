@@ -7,7 +7,8 @@ import pic from './calendar.png';
 const RegisterLogin = () => {
   const [userGoogleInfo, setUserGoogleInfo] = useState(null);
   const [showRoles, setShowRoles] = useState(false);
-  const { setRole, setUserEmail } = useContext(UserContext);
+  // const { setRole, setUserEmail } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const nav = useNavigate();
 
   // Google OAuth setup
@@ -94,6 +95,8 @@ const RegisterLogin = () => {
       const data = await response.json();
       if (data.userId && data.userEmail) {
         setUser({ userId: data.userId, userEmail: data.userEmail, role: role });
+        console.log('Updated user:', { userId: data.userId, userEmail: data.userEmail, role: role });
+
       }
 
       setShowRoles(false); // Hide role selection
