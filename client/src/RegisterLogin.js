@@ -61,6 +61,7 @@ const RegisterLogin = () => {
         setShowRoles(true);
       }
       else {
+        setUser({ userId: data.user.userId, userEmail: data.user.userEmail, role: data.user.role });
         setShowRoles(false);
         nav('/calendar');
       }

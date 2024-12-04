@@ -9,13 +9,14 @@ const Invitations = () => {
 
   //get the invitations of current user
   useEffect(() => {
+    console.log("Current user invitations:", user);
     const getInvitations = async () => {
-      if (!user) {
+      if (!user || !user.userId) {
         setError('User not logged in.');
         return;
       }
       try {
-        const response = await fetch(`http://localhost:3000/invitations/${user.id}`);
+        const response = await fetch(`http://localhost:3000/invitations/${user.userId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch invitations');
         }
@@ -35,7 +36,11 @@ const Invitations = () => {
   return (
     <div>
       <h2>View your invitations here</h2>
-      {/*SHOW INVITATIONS*/}
+      <ul>
+        {invitations.map((invitation, index) => (
+          <li key={index}>{invitation.title}</li>
+        ))}
+      </ul>
     </div>
   );
 };

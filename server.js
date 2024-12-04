@@ -114,7 +114,14 @@ app.post('/user-exists', async (req, res) => {
       return res.status(200).json({ exists: false });
     }
 
-    res.status(200).json({ exists: true });
+    res.status(200).json({ 
+      exists: true, 
+      user: { 
+        userId: user._id.toString(),
+        userEmail: user.email, 
+        role: user.role 
+      } 
+    });
   } catch (err) {
     console.error('Error checking if user exists:', err);
     res.status(500).json({ message: 'Internal server error' });
