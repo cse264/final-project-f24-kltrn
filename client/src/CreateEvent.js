@@ -62,8 +62,8 @@ const CreateEvent = () => {
       <h2>Create an Event</h2>
       <div className="form-container">
       {user.userId ? (
-        <form onSubmit={handleCreateEvent}>
-          <div>
+        <form onSubmit={handleCreateEvent} className="event-form">
+          <div className="form-group">
             <label htmlFor="title">Event Title:</label>
             <input
               type="text"
@@ -73,7 +73,7 @@ const CreateEvent = () => {
               required
             />
           </div>
-          <div>
+          <div className="form-group">
             <label htmlFor="desc">Description:</label>
             <input
               type="text"
@@ -83,7 +83,7 @@ const CreateEvent = () => {
               required
             />
           </div>
-          <div>
+          <div className="form-group">
             <label htmlFor="loc">Location:</label>
             <input
               type="text"
@@ -93,7 +93,7 @@ const CreateEvent = () => {
               required
             />
           </div>
-          <div>
+          <div className="form-group">
             <label htmlFor="startTime">Event Start Time:</label>
             <input
               type="datetime-local"
@@ -103,7 +103,7 @@ const CreateEvent = () => {
               required
             />
           </div>
-          <div>
+          <div className="form-group">
             <label htmlFor="endTime">Event End Time:</label>
             <input
               type="datetime-local"
@@ -113,7 +113,7 @@ const CreateEvent = () => {
               required
             />
           </div>
-          <div>
+          <div className="form-group invitees-group">
             <label htmlFor="invitees">Invitees (comma-separated emails):</label>
             <input
               type="text"

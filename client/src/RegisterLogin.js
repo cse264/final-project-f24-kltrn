@@ -96,7 +96,6 @@ const RegisterLogin = () => {
       if (data.userId && data.userEmail) {
         setUser({ userId: data.userId, userEmail: data.userEmail, role: role });
         console.log('Updated user:', { userId: data.userId, userEmail: data.userEmail, role: role });
-
       }
 
       setShowRoles(false); // Hide role selection
@@ -137,16 +136,21 @@ const RegisterLogin = () => {
   }, []);
 
   return (
-    <div>
+    <div className="login-page">
       <div className="login-container">
-        {!userGoogleInfo && (
-          <div>
-            <img src={pic} alt="calendar" className="image" />
-            <h2>Log in to PlanPal!</h2>
-            <button id="authorize_button" onClick={handleAuthClick}>
-              Log In with Google
-            </button>
-          </div>
+    {!userGoogleInfo && (
+      <div className="login-card">
+        <img src={pic} alt="calendar" className="logo" />
+        <h2>Organize Your Life with PlanPal!</h2>
+        <h3 className="tagline">Your ultimate event planner</h3>
+        <button 
+          id="authorize_button" 
+          className="google-btn" 
+          onClick={handleAuthClick}
+        >
+          Log In with Google
+        </button>
+      </div>
         )}
       </div>
 
