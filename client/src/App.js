@@ -48,7 +48,7 @@ const RoleBasedNav = () => {
   };
 
   if (!user || !user.role) {
-    return <h2>Loading...</h2>;
+    return <h2></h2>;
   }
   const { role } = user; 
   return (
