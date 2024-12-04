@@ -21,6 +21,11 @@ form {
   gap: 1.5rem;
 }
 
+.logo {
+  width: 450px;
+  height: auto;
+}
+
 /* Input fields styling */
 input {
   width: 95%;

@@ -21,13 +21,35 @@ router.put('/:id', async (req, res) => {
     }
 
     try {
-        const updateInvite = await Invitation.findByIdAndUpdate(id, { status }, { new: true, runValidators: true });
+        const updateInvite = await Invitation.findByIdAndUpdate(
+            id, { status }, { new: true, runValidators: true })
+            .populate('eventId', 'title description startTime endTime location organizerId')
+            .populate('eventId.organizerId', 'name email');
+        
 
         if (!updateInvite) {
             return res.status(404).json({ message: 'Invitation not found' });
         }
 
-        res.status(200).json({ message: 'Invitation status updated: ', invitation: updateInvite });
+        const formattedInvite = {
+            invitationId: updateInvite._id,
+            status: updateInvite.status,
+            event: {
+                id: updateInvite.eventId._id,
+                title: updateInvite.eventId.title,
+                description: updateInvite.eventId.description,
+                startTime: updateInvite.eventId.startTime,
+                endTime: updateInvite.eventId.endTime,
+                location: updateInvite.eventId.location,
+                organizer: {
+                    id: updateInvite.eventId.organizerId._id,
+                    name: updateInvite.eventId.organizerId.name,
+                    email: updateInvite.eventId.organizerId.email,
+                },
+            },
+        }
+
+        res.status(200).json({ message: 'Invitation status updated: ', invitation: formattedInvite });
     } catch (err) {
         console.error('Error updating invitation status:', err);
         res.status(500).json({ message: 'Internal server error.' });

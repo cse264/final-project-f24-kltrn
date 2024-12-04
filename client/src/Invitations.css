@@ -2,7 +2,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     margin-top: 2rem;
+    min-height: 100vh;
   }
   
   .invitations-list {
@@ -37,3 +39,26 @@
     font-weight: bold;
     color: #007bff;
   }
+
+  .invitation-status-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .invitation-status-buttons button {
+    background-color: #8e4fa6;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.invitation-status-buttons button:hover {
+    background-color: #633874;
+}
