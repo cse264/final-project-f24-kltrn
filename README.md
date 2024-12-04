@@ -1,10 +1,28 @@
 # Final Project - PlanPal
 ## Team Members: Kyra Lee, Rachel Gruber, Natalie Mathern, Luke Strianese, Taylor Stanley
 
-### About our project
+### About PlanPal
 PlanPal allows users to view their own Google calendar, create events, and accept invitations to stay organized. Users have the option to be one of two roles:
 * Event Organizer: has the ability to create events and invite others, edit or delete their existing events, and view their events.
 * Invitee: has the ability to view events they have been invited to, accept or decline them, change their RSVP response, and view the events they've accepted. 
+
+### User Stories
+* As an event organizer, I want to be able to schedule events.
+* As an event organizer, I want to be able to set the title, location, date/time, and other event details.
+* As an event organizer, I want to be able to edit or delete previously scheduled events.
+* As an event organizer, I want to be able to invite other users to my events.
+* As an event organizer, I want to see the RSVP status of the people I have invited. 
+* As an invitee, I want to be able to RSVP to another user’s event.
+* As an invitee, I want to be able to change my response to another user’s event. 
+* As a user, I want to sync events from a third-party calendar so I can see all my commitments in one place.
+* As a user, I want to be able to log out of my profile.
+
+### Our Tech Stack
+* Frontend - React
+* Backend - Node.js
+* Database - MongoDB
+* API - Google Calendar
+* New Library - FullCalendar
 
 ### Running the project
 First you must create an .env file in your repository with the environmental variables MONGO_URI, CLIENT_ID, and CLIENT_SECRET. To get the MONGO_URI, accept my invitation to the MongoDB '264FinalProject' cluster. When signed in, select the Cluster, click 'Connect', then select 'Drivers' -> 'Node.js 6.7 or later'. There should be a connection string that looks something like:
@@ -18,6 +36,13 @@ For CLIENT_ID and CLIENT_SECRET go to the Google Cloud Console. Everyone should 
 Once you add those three environmental variables you should be able to run the project. 
 
 Make sure you are in the final-project-f24-kltrn folder. Run `npm install` and then `npm run dev`.
+
+You will be prompted to login with Google. If you are a first time user, you will be prompted to select whether you would like to be registered as an event organizer or an invitee. Once you register, you will be unable to change your role (unless you delete your user from the users database in MongoDB). To run the app and explore both roles, we recommend logging in with two different emails and registering one for each role. 
+
+When creating an event, the invitees must be previously registered users. For testing, below are some emails already registered as invitees in the database:
+* kyralee1020@gmail.com
+* nam325@lehigh.edu
+* gruber.rachel3@gmail.com
 
 ### Event and Invitation Endpoints
 
