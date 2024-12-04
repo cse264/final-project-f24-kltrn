@@ -6,6 +6,9 @@ body {
     padding: 2rem;
     background: linear-gradient(45deg, #f3e8f7, #e0c9ef);
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
   
 h2 {
