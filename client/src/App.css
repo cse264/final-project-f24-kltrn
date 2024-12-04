@@ -121,16 +121,6 @@ button.nav-link {
   gap: 10px;
 }
 
-/* .event-container {
-  font-family: "Comfortaa", sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  margin: 0;
-  height: 100vh;
-  text-align: center;
-} */
-
 .login-container {
   display: flex;
   justify-content: center;

@@ -1,11 +1,13 @@
-# Final Project
+# Final Project - PlanPal
+## Team Members: Kyra Lee, Rachel Gruber, Natalie Mathern, Luke Strianese, Taylor Stanley
 
-## Due Last day of Class
-## First report due Monday Oct 28, 2024
-
+### About our project
+PlanPal allows users to view their own Google calendar, create events, and accept invitations to stay organized. Users have the option to be one of two roles:
+* Event Organizer: has the ability to create events and invite others, edit or delete their existing events, and view their events.
+* Invitee: has the ability to view events they have been invited to, accept or decline them, change their RSVP response, and view the events they've accepted. 
 
 ### Running the project
-First you must create an .env file in your repository with the environmental variables MONGO_URI, CLIENT_ID, and CLIENT_SECRET. To get the MONGO_URI, accept my invitation to the MonogDB '264FinalProject' cluster. When signed in, select the Cluster, click 'Connect', then select 'Drivers' -> 'Node.js 6.7 or later'. There should be a connection string that looks something like:
+First you must create an .env file in your repository with the environmental variables MONGO_URI, CLIENT_ID, and CLIENT_SECRET. To get the MONGO_URI, accept my invitation to the MongoDB '264FinalProject' cluster. When signed in, select the Cluster, click 'Connect', then select 'Drivers' -> 'Node.js 6.7 or later'. There should be a connection string that looks something like:
 
 mongodb+srv://tas325:<db_password>@264finalproject.jpwxa.mongodb.net/?retryWrites=true&w=majority&appName=264FinalProject
 
@@ -27,8 +29,7 @@ Make sure you are in the final-project-f24-kltrn folder. Run `npm install` and t
 * `DELETE /events/:id` - Deletes an event by its ID along with all associated invitations.
 * `PUT /invitations/:id` - Updates the status of an invitation (e.g., pending, accepted, declined).
 * `GET /invitations/:user_id` - Retrieves all invitations received by a specific invitee, including associated event details.
-
-### Build a web app in a team of 4-5
+* `GET /invitations/event/:event_id` - Get list of invitations associated with an event
 
 ### Requirements:
 * Must have user accounts and different user roles (like user/Admin, free/paid, etc)
