@@ -23,8 +23,7 @@ const Invitations = () => {
         const data = await response.json();
         setInvitations(data.invitations);
       } catch (err) {
-        console.error('Error fetching invitations:', err);
-        setError('Error fetching invitations.');
+        console.log('Error fetching invitations');
       }
     };
     getInvitations();
