@@ -24,7 +24,7 @@ PlanPal allows users to view their own Google calendar, create events, and accep
 * API - Google Calendar
 * New Library - FullCalendar
 
-### Running the project
+### Running the Project
 First you must create an .env file in your repository with the environmental variables MONGO_URI, CLIENT_ID, and CLIENT_SECRET. To get the MONGO_URI, accept my invitation to the MongoDB '264FinalProject' cluster. When signed in, select the Cluster, click 'Connect', then select 'Drivers' -> 'Node.js 6.7 or later'. There should be a connection string that looks something like:
 
 mongodb+srv://tas325:<db_password>@264finalproject.jpwxa.mongodb.net/?retryWrites=true&w=majority&appName=264FinalProject
