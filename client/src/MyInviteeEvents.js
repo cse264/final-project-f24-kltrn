@@ -31,23 +31,24 @@ const MyInviteeEvents = () => {
   }, []);
 
   return (
-    <div>
-      <h2>Your events:</h2>
-
+    <div className="event-container">
+      <h2 className="event-header">Your events:</h2>
       {response.length > 0 && hasEvents ? (
-        <div>
+        <div className="event-grid">
           {response.map((item, index) => (
-            <div key={index}>
-              <h3>{item.title}</h3>
-              <p>Description: {item.description}</p>
-              <p>Location: {item.location}</p>
-              <p>Start: {new Date(item.startTime).toLocaleString()}</p>
-              <p>End: {new Date(item.endTime).toLocaleString()}</p>
+            <div key={index} className="event-card">
+              <h3 className="event-title">{item.title}</h3>
+              <p className="event-description">{item.description}</p>
+              <p className="event-location">{item.location}</p>
+              <p className="event-time">
+                <strong>Starts:</strong> {new Date(item.startTime).toLocaleString()} <br />
+                <strong>Ends:</strong> {new Date(item.endTime).toLocaleString()}
+              </p>
             </div>
           ))}
         </div>
       ) : (
-        <div>
+        <div className="no-events">
           <h2>No events</h2>
         </div>
       )}
