@@ -48,9 +48,23 @@ const RegisterLogin = () => {
 
       const { name, email } = userInfoResponse.result;
       setUserGoogleInfo({ name, email }); // Set user info
-      setUserEmail(email);
-      // Proceed to role selection
-      setShowRoles(true);
+
+      const response = await fetch('http://localhost:8000/user-exists', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+        credentials: 'include',
+      });
+
+      const data = await response.json();
+      if (!data.exists) {
+        setShowRoles(true);
+      }
+      else {
+        setUser({ userId: data.user.userId, userEmail: data.user.userEmail, role: data.user.role });
+        setShowRoles(false);
+        nav('/calendar');
+      }
     } catch (error) {
      console.log('Error during sign-in:', error);
     }
@@ -70,13 +84,18 @@ const RegisterLogin = () => {
     }
 
     try {
-      await fetch('http://localhost:8000/google-login', {
+      const response = await fetch('http://localhost:8000/google-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...userGoogleInfo, role }),
         credentials: 'include',
       });
-      setRole(role);
+
+      const data = await response.json();
+      if (data.userId && data.userEmail) {
+        setUser({ userId: data.userId, userEmail: data.userEmail, role: role });
+      }
+
       setShowRoles(false); // Hide role selection
       // setIsLoggedIn(true); // Set user as logged in
       nav('/calendar'); // Navigate to calendar or another page after role selection

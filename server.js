@@ -92,7 +92,7 @@ app.post('/google-login', async (req, res) => {
       console.log('User added to database: ', email);
     }
 
-    res.status(200).json({ message: 'Google login via backend complete' });
+    res.status(200).json({ message: 'Google login via backend complete', userId: user._id, userEmail: user.email });
   } catch (err) {
     console.error('Error logging in user', err);
     res.status(400);
@@ -114,7 +114,14 @@ app.post('/user-exists', async (req, res) => {
       return res.status(200).json({ exists: false });
     }
 
-    res.status(200).json({ exists: true });
+    res.status(200).json({ 
+      exists: true, 
+      user: { 
+        userId: user._id.toString(),
+        userEmail: user.email, 
+        role: user.role 
+      } 
+    });
   } catch (err) {
     console.error('Error checking if user exists:', err);
     res.status(500).json({ message: 'Internal server error' });
