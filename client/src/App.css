@@ -49,6 +49,24 @@ nav h2 {
   font-size: 20px;
 }
 
+button {
+  all: unset;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: inherit;
+  color: inherit;
+}
+
+button.nav-link {
+  display: flex;
+  font-size: 20px;
+  color: #fff;
+  text-decoration: none;
+  padding: 0;
+  background: none;
+}
+
+
 .banner {
   display: flex;
   align-items: center;
