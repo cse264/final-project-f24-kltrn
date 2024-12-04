@@ -42,7 +42,7 @@ router.post('/', async (req, res) => {
         res.status(200).json({ event: newEvent });
     }
     catch (error) {
-        console.error('Error adding event:', err);
+        console.error('Error adding event:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
@@ -62,7 +62,7 @@ router.put('/:id', async (req, res) => {
         res.status(200).json({ event: updateEvent });
     }
     catch (error) {
-        console.error('Error editing event:', err);
+        console.error('Error editing event:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
