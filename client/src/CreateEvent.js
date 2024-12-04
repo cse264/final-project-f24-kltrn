@@ -2,11 +2,13 @@ import React, { useState, useContext } from 'react';
 import { UserContext } from './UserContext';
 
 const CreateEvent = () => {
-  const { userEmail, role } = useContext(UserContext); // Access user context
+  const { user } = useContext(UserContext);
   const [title, setTitle] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [invitees, setInvitees] = useState('');
+  const [description, setDescription] = useState('');
+  const [location, setLocation] = useState('');
 
   const handleCreateEvent = async (e) => {
     e.preventDefault();
@@ -16,16 +18,18 @@ const CreateEvent = () => {
       return;
     }
 
-    if (!userEmail) {
+    if (!user.userId) {
       alert('Please log in to create an event');
       return;
     }
 
     const event = {
       title: title,
+      description: description,
+      location: location,
       startTime: new Date(startTime).toISOString(),
       endTime: new Date(endTime).toISOString(),
-      userId: userEmail, // Use email from UserContext
+      organizerId: user.userId, 
       invitees: invitees.split(',').map(email => email.trim()),
     };
 
@@ -55,7 +59,7 @@ const CreateEvent = () => {
   return (
     <div>
       <h2>Create an Event</h2>
-      {userEmail ? (
+      {user.userId ? (
         <form onSubmit={handleCreateEvent}>
           <div>
             <label htmlFor="title">Event Title:</label>
@@ -64,6 +68,26 @@ const CreateEvent = () => {
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="desc">Description:</label>
+            <input
+              type="text"
+              id="desc"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="loc">Location:</label>
+            <input
+              type="text"
+              id="loc"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
               required
             />
           </div>

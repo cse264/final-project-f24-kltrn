@@ -42,7 +42,7 @@ router.post('/', async (req, res) => {
         res.status(200).json({ event: newEvent });
     }
     catch (error) {
-        console.error('Error adding event:', err);
+        console.error('Error adding event:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
