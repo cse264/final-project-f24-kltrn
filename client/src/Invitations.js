@@ -16,7 +16,7 @@ const Invitations = () => {
         return;
       }
       try {
-        const response = await fetch(`http://localhost:3000/invitations/${user.userId}`);
+        const response = await fetch(`http://localhost:8000/invitations/${user.userId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch invitations');
         }
