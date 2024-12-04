@@ -192,9 +192,9 @@ button.nav-link {
   }
 }
 
-.edit-btn, .delete-btn {
+.btn {
   justify-content: center;
-  background-color: #d2a7f1ec;
+  background-color: #8e4fa6;
   color: white;
   border: none;
   padding: 12px 24px;
@@ -207,6 +207,17 @@ button.nav-link {
   align-items: center;
 }
 
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 #authorize_button {
   justify-content: center;

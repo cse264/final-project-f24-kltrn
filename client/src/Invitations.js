@@ -9,7 +9,6 @@ const Invitations = () => {
 
   //get the invitations of current user
   useEffect(() => {
-    console.log("Current user invitations:", user);
     const getInvitations = async () => {
       if (!user || !user.userId) {
         setError('User not logged in.');
@@ -22,6 +21,7 @@ const Invitations = () => {
         }
         const data = await response.json();
         setInvitations(data.invitations);
+        console.log(data.invitations);
       } catch (err) {
         console.log('Error fetching invitations');
       }
@@ -65,6 +65,7 @@ const Invitations = () => {
           invitations.map((invitation) => (
             <div key={invitation.invitationId} className="invitation-card">
               <h3>{invitation.event.title}</h3>
+              {/* <h3>Invited by: {invitation.event.organizer.id}</h3> */}
               <p><strong>Description:</strong> {invitation.event.description || ''}</p>
               <p><strong>Location:</strong> {invitation.event.location || ''}</p>
               <p><strong>Start Time:</strong> {new Date(invitation.event.startTime || '').toLocaleString()}</p>
