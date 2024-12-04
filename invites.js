@@ -35,8 +35,8 @@ router.put('/:id', async (req, res) => {
 });
 
 // Get list of invitations that an invitee has received - 'http://localhost:8000/invitations/:user_id'
-router.get('/:email', async (req, res) => {
-    const userId = req.params.email;
+router.get('/:user_id', async (req, res) => {
+    const userId = req.params.user_id;
 
     try {
         const user = await User.findById(userId);
